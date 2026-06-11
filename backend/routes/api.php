@@ -21,6 +21,54 @@ Route::prefix('auth')->group(function () {
 
 Route::post('/setup-manager', [AuthController::class, 'setupManager']);
 
+// Diagnostic endpoint (hapus setelah debugging selesai)
+Route::get('/health', function () {
+    $checks = [];
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $checks['database'] = 'connected';
+    } catch (\Exception $e) {
+        $checks['database'] = 'FAILED: ' . $e->getMessage();
+    }
+    try {
+        $tables = ['users', 'personal_access_tokens', 'periods', 'kpi_categories', 'kpi_weights', 'tasks', 'evaluations', 'task_progresses'];
+        foreach ($tables as $t) {
+            $checks['table_' . $t] = \Illuminate\Support\Facades\Schema::hasTable($t) ? 'exists' : 'MISSING';
+        }
+    } catch (\Exception $e) {
+        $checks['tables_check'] = 'FAILED: ' . $e->getMessage();
+    }
+    try {
+        $cols = \Illuminate\Support\Facades\Schema::getColumnListing('users');
+        $checks['users_columns'] = $cols;
+    } catch (\Exception $e) {
+        $checks['users_columns'] = 'FAILED: ' . $e->getMessage();
+    }
+    try {
+        $user = \App\Models\User::where('username', 'manager')->first();
+        $checks['manager_user'] = $user ? [
+            'id' => $user->id,
+            'name' => $user->name,
+            'username' => $user->username,
+            'email' => $user->email,
+            'role' => $user->role,
+            'is_active' => $user->is_active,
+            'password_length' => strlen($user->password),
+            'password_starts' => substr($user->password, 0, 7),
+            'password_verify' => \Illuminate\Support\Facades\Hash::check('password123', $user->password),
+        ] : 'NOT FOUND';
+    } catch (\Exception $e) {
+        $checks['manager_user'] = 'FAILED: ' . $e->getMessage();
+    }
+    try {
+        $tokenCols = \Illuminate\Support\Facades\Schema::getColumnListing('personal_access_tokens');
+        $checks['pat_columns'] = $tokenCols;
+    } catch (\Exception $e) {
+        $checks['pat_columns'] = 'FAILED: ' . $e->getMessage();
+    }
+    return response()->json($checks);
+});
+
 // ──────────────────────────────────────────────────────────
 // PROTECTED ROUTES
 // ──────────────────────────────────────────────────────────
