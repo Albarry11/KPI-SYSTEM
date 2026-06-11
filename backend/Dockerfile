@@ -8,7 +8,7 @@ RUN docker-php-ext-install \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-grpc
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-grpc --no-scripts
 RUN mkdir -p storage/logs storage/framework/cache \
     storage/framework/sessions storage/framework/views \
     bootstrap/cache \
