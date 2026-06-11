@@ -1,0 +1,38 @@
+# ── Dependencies ──────────────────────
+node_modules/
+vendor/
+
+# ── Environment ───────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Build Output ──────────────────────
+dist/
+build/
+
+# ── Laravel ───────────────────────────
+storage/*.key
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*.php
+bootstrap/cache/*.php
+
+# ── IDE ───────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ──────────────────────────────
+*.log
+npm-debug.log*
+
+# ── Docker ────────────────────────────
+docker-compose.override.yml
