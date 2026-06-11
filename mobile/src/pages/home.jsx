@@ -185,6 +185,15 @@ export default function Home() {
     </div>
   )
 
+  async function handleLogout() {
+    try {
+      await api.post('/auth/logout')
+    } catch (err) {}
+    localStorage.removeItem('kpi_token')
+    localStorage.removeItem('kpi_user')
+    navigate('/login')
+  }
+
   const firstName = user.name?.split(' ')[0] || 'Karyawan'
   const hour = new Date().getHours()
   const greeting = hour < 11 ? 'Selamat pagi' : hour < 15 ? 'Selamat siang' : hour < 18 ? 'Selamat sore' : 'Selamat malam'
@@ -201,6 +210,13 @@ export default function Home() {
             🔔 <span className={styles.notifDot} />
           </div>
           <div className={styles.avatarBtn}>{initials}</div>
+          <div onClick={handleLogout} style={{ marginLeft: 12, padding: '4px', color: 'var(--danger, #ff5e5e)', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Log Out">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </div>
         </div>
       </div>
 
