@@ -31,7 +31,7 @@ Route::get('/health', function () {
         $checks['database'] = 'FAILED: ' . $e->getMessage();
     }
     try {
-        $tables = ['users', 'personal_access_tokens', 'periods', 'kpi_categories', 'kpi_weights', 'tasks', 'evaluations', 'task_progresses'];
+        $tables = ['users', 'personal_access_tokens', 'periods', 'kpi_categories', 'kpi_weights', 'tasks', 'evaluations', 'task_progresses', 'reports'];
         foreach ($tables as $t) {
             $checks['table_' . $t] = \Illuminate\Support\Facades\Schema::hasTable($t) ? 'exists' : 'MISSING';
         }
