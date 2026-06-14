@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'period_id', 'manager_id', 'title', 'summary',
         'avg_score', 'top_performer_id', 'lowest_performer_id',
